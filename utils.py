@@ -1,7 +1,8 @@
-import torch
-import numpy as np
-import torch.nn.functional as F
 from pathlib import Path
+import numpy as np
+import torch
+import torch.nn.functional as F
+from torchvision import transforms
 
 
 def l2_normalize(x, dim=1):
@@ -65,3 +66,16 @@ def centroids_init(num_centroids, embedding_dim, save_dir=BASE_CENTROID_PATH):
     torch.save(centroids.data.cpu().detach(), save_path)
 
     return centroids.data
+
+
+def transforms_list_from_dict(transform_dict):
+    transforms_list = []
+    for k, v in transform_dict.items():
+        t_cls = getattr(transforms, k)
+        if type(v) is dict:
+            t_inst = t_cls(**v)
+        else:
+            t_inst = t_cls(v)
+        transforms_list.append(t_inst)
+    return transforms_list
+    

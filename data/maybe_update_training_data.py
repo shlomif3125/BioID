@@ -54,7 +54,7 @@ def add_placement_ind(subject_sensor_df):
 
 
 def run_everything_and_return_new_train_path(update=True):
-    dfs_dir = '/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/'
+    dfs_dir = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/'
 
     prev_data_df_files = list(map(str, Path(dfs_dir).glob('all_data_till_*.pkl')))
     latest_prev_data_df_file = max(prev_data_df_files, key=lambda x: datetime.strptime(x.split('all_data_till_')[1].split('.pkl')[0], '%d%b%Y'))
@@ -209,9 +209,9 @@ def run_everything_and_return_new_train_path(update=True):
 
         len(val_df) / len(train_df), len(test_df) / len(train_df)
 
-        test_df.to_pickle(f'/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_{datestr}_test_v0.pkl')
-        val_df.to_pickle(f'/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_{datestr}_val_v0.pkl')
-        train_df.to_pickle(f'/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_{datestr}_train_v0.pkl')
+        test_df.to_pickle(f'/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_{datestr}_test_v0.pkl')
+        val_df.to_pickle(f'/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_{datestr}_val_v0.pkl')
+        train_df.to_pickle(f'/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_{datestr}_train_v0.pkl')
 
 
 
@@ -231,9 +231,9 @@ def run_everything_and_return_new_train_path(update=True):
 
     print(num_subjects_per_day_df)
 
-    cur_test_df = pd.read_pickle('/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl')
-    cur_val_df = pd.read_pickle('/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_v0.pkl')
-    cur_train_paths_format = '/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_train_v'
+    cur_test_df = pd.read_pickle('/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl')
+    cur_val_df = pd.read_pickle('/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_v0.pkl')
+    cur_train_paths_format = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_train_v'
     cur_train_df_path = f'{cur_train_paths_format}0.pkl'
     cur_train_df = pd.read_pickle(cur_train_df_path)
 

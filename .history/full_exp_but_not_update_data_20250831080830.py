@@ -20,10 +20,10 @@ import pickle
 from glob import glob
 from datasets import PixelBioIDGeneralClassDatasetV2_TEMP as PixelBioIDGeneralClassDatasetV2
 from models import PrefixPlusPretrainedArcFaceModelWithDynamicHPV2, MyStepLRScheduler
-from update_training_data import run_everything_and_return_new_train_path
+from maybe_update_training_data import run_everything_and_return_new_train_path
 from analyze_models_and_save_results import run_analysis_and_get_results
 
-exp_to_copy = "/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/new_blueprint_data_16Dec2024_split__12Jan2025/"
+exp_to_copy = "/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/new_blueprint_data_16Dec2024_split__12Jan2025/"
 config = pickle.load(open(os.path.join(exp_to_copy, 'config.pkl'), 'rb'))
 
 config['transform_configs']['train'] = {'RandomPerspective': 0.15,
@@ -34,7 +34,7 @@ config['transform_configs']['train'] = {'RandomPerspective': 0.15,
                                         'RandomErasing': 0.2,
                                         'ColorJitter': {'brightness': 0.1, 'contrast': 0.1}}
 
-exps_dir = "/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/"
+exps_dir = "/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/"
 
 embedding_size = config['embedding_size']
 learning_rate = config['learning_rate'] / 10
@@ -68,9 +68,9 @@ print('GONNA GET ME SOME DATA')
 train_df_file = run_everything_and_return_new_train_path(update=False)
 print('DATA AQUIRED')
 
-val_df_file = '/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_for_TB_v0.pkl'
-test_df_file = '/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_for_TB_v0.pkl'
-full_test_df_file = '/mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl'
+val_df_file = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_for_TB_v0.pkl'
+test_df_file = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_for_TB_v0.pkl'
+full_test_df_file = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl'
 train_df = pd.read_pickle(train_df_file)
 val_df = pd.read_pickle(val_df_file)
 test_df = pd.read_pickle(test_df_file)

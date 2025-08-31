@@ -1,0 +1,68 @@
+
+data:
+  batch_size: 64
+  workers: 10
+  class_column: subject_
+  path_column: local_png_path
+
+  train:
+    update_train_data: false
+    df_file: /mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/all_data_till_24Aug2025.pkl
+    transforms:
+      ColorJitter:
+        brightness: 0.1
+        contrast: 0.1
+      RandomErasing: 0.2
+      RandomHorizontalFlip: 0.5
+      RandomPerspective: 0.15
+      RandomResizedCrop:
+        scale: !!python/tuple
+        - 0.8
+        - 1.12
+        size: !!python/tuple
+        - 224
+        - 224
+      RandomRotation: 2
+      RandomVerticalFlip: 0.5
+  val:
+    df_file: /mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_for_TB_v0.pkl
+    transforms:
+      CenterCrop: !!python/tuple
+      - 480
+      - 480
+      Resize: !!python/tuple
+      - 224
+      - 224
+  test:
+    df_file: /mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_for_TB_v0.pkl
+    transforms:
+      CenterCrop: !!python/tuple
+      - 480
+      - 480
+      Resize: !!python/tuple
+      - 224
+      - 224
+
+model:
+  lr_config:
+    learning_rate: 5.0e-06
+    lr_scheduler_kwargs: 
+      lower_bound_lr: 1.64e-4
+      step_size: 80
+      gamma: 0.8
+    lr_scheduler_has_monitor: False
+
+  embedding_size: 512
+  pretrained_model_name: efficientnet_b3
+  unpg:
+    margin: 0.04
+    wisk: 0.5
+
+trainer:
+  epochs: 4000
+  exps_dir: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/
+  monitor: approx_test_acc
+  exp_name: new_blueprint_data_16Dec2024_split
+
+analysis:
+  df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl
