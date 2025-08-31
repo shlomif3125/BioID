@@ -53,13 +53,11 @@ def add_placement_ind(subject_sensor_df):
     return subject_sensor_df
 
 
-def run_everything_and_return_new_train_path(update=True):
+def run_everything_and_return_new_train_path():
     dfs_dir = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/'
 
     prev_data_df_files = list(map(str, Path(dfs_dir).glob('all_data_till_*.pkl')))
     latest_prev_data_df_file = max(prev_data_df_files, key=lambda x: datetime.strptime(x.split('all_data_till_')[1].split('.pkl')[0], '%d%b%Y'))
-    if not update:
-        return latest_prev_data_df_file
     latest_prev_data_df = pd.read_pickle(latest_prev_data_df_file)
     latest_prev_date_str = datetime.strftime(latest_prev_data_df['recording_date'].max() - timedelta(days=1), '%d%b%Y')
 

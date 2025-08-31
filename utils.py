@@ -3,6 +3,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torchvision import transforms
+from collections.abc import Mapping
+
 
 
 def l2_normalize(x, dim=1):
@@ -72,7 +74,7 @@ def transforms_list_from_dict(transform_dict):
     transforms_list = []
     for k, v in transform_dict.items():
         t_cls = getattr(transforms, k)
-        if type(v) is dict:
+        if isinstance(v, Mapping):
             t_inst = t_cls(**v)
         else:
             t_inst = t_cls(v)

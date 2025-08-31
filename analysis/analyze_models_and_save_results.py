@@ -16,15 +16,11 @@ from torchvision import transforms
 from torch.utils.data import DataLoader
 from sklearn.metrics import roc_curve
 from sklearn.preprocessing import normalize
-from datasets import PixelBioIDGeneralClassDatasetV2
-from models import PrefixPlusPretrainedArcFaceModelWithDynamicHPV2
+from data.datasets import PixelBioIDGeneralClassDatasetV2
+from model.models import PrefixPlusPretrainedArcFaceModelWithDynamicHPV2
 from inference import Inference
-from analysis import (BioIDSimulatorAnalyzerV2, 
-                      EnrolmentMethod)
+from .analysis import BioIDSimulatorAnalyzerV2, EnrolmentMethod
 import warnings
-import imageio.v2 as imageio
-import multiprocessing as mp
-from itertools import product
 
 tqdm.pandas()
 warnings.simplefilter('ignore', pd.errors.SettingWithCopyWarning)

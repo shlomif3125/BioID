@@ -1,5 +1,5 @@
 import pytorch_lightning as pl
-from losses import NamedWeightedLossClass
+from .losses import NamedWeightedLossClass
 from typing import Any, Optional
 import torch
 from torch import nn
@@ -13,7 +13,7 @@ from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts, ReduceLROnPlat
 import functools
 from torch.utils.data import DataLoader
 
-
+import time
 
 def rsetattr(obj, attr, val):
     pre, _, post = attr.rpartition('.')
@@ -89,11 +89,26 @@ class PrefixPlusPretrainedArcFaceModelWithDynamicHPV2(pl.LightningModule):
                  ):
         
         super().__init__()
+        print(f"Starting model init...")
+        
         self.in_channels = in_channels
+        print(f"Creating prefix layers...")
         pre_batch_norm = nn.BatchNorm2d(in_channels)
         prefix_conv = nn.Conv2d(in_channels, 3, 1)
+        
+        print(f"Loading TIMM model: {pretrained_model_name}")
         pretrained_model = timm.create_model(pretrained_model_name, num_classes=embedding_size, pretrained=True)
+        print(f"TIMM model loaded, creating sequential...")
+        
         self.model = nn.Sequential(pre_batch_norm, prefix_conv, pretrained_model)
+        print(f"Model created, setting up losses...")            
+        
+        # super().__init__()
+        # self.in_channels = in_channels
+        # pre_batch_norm = nn.BatchNorm2d(in_channels)
+        # prefix_conv = nn.Conv2d(in_channels, 3, 1)
+        # pretrained_model = timm.create_model(pretrained_model_name, num_classes=embedding_size, pretrained=True)
+        # self.model = nn.Sequential(pre_batch_norm, prefix_conv, pretrained_model)
         
         self.named_weighted_loss_list = named_weighted_loss_list
         self.named_weighted_loss_func_module_dict = nn.ModuleDict({nwl.name: nwl.func 
@@ -109,7 +124,10 @@ class PrefixPlusPretrainedArcFaceModelWithDynamicHPV2(pl.LightningModule):
                 train_metrics['train_' + l.name] = self.named_weighted_loss_func_module_dict[l.name]
                 val_metrics['val_' + l.name] = self.named_weighted_loss_func_module_dict[l.name]
                 # test_metrics['test_' + l.name] = self.named_weighted_loss_func_module_dict[l.name]
-                
+        
+        print(f"named-weighted-losses compiled")
+
+        
         self.train_metrics = train_metrics
         self.val_metrics = val_metrics
         self.test_metrics = test_metrics
@@ -138,16 +156,22 @@ class PrefixPlusPretrainedArcFaceModelWithDynamicHPV2(pl.LightningModule):
                     updates_list = step_to_updates_list.get(step, [])
                     updates_list.append((nwl_name_to_index[nwl_name], update_field, val, print_log))
                     step_to_updates_list[step] = updates_list
-
+                            
         self.sorted_step_to_updates_list = {step: step_to_updates_list[step] for step in sorted(list(step_to_updates_list.keys()))}
-        
+
+        print(f"schedulers set-up complete")
+
         self.my_global_step = 0
 
         self.embs_and_meta_data = pd.DataFrame(columns=['subject_', 'sensor_serial', 'embedding'])
         
         self.automatic_optimization = False
         
-        self.save_hyperparameters()
+        # self.save_hyperparameters()
+        self.save_hyperparameters(ignore=['train_ds', 'val_ds_list'])
+
+        
+        print(f"Model init complete!")
         
     def forward(self, x):
         return self.model(x)

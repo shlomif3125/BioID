@@ -1,47 +1,42 @@
 
 data:
   batch_size: 64
-  workers: 10
+  num_workers: 10
   class_column: subject_
-  path_column: local_png_path
+  path_column: vast_png_path
+  target_crop_size: [420, 600]
+  subsample_factor: [3, 3]
+  extra_column_outputs: 
+    - sensor_serial
+    - subject_
+    - selected_power
+    - placement_ind
+    - wiggle_ind
 
   train:
     update_train_data: false
-    df_file: /mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/all_data_till_24Aug2025.pkl
+    df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_train_v14.pkl
     transforms:
       ColorJitter:
         brightness: 0.1
         contrast: 0.1
-      RandomErasing: 0.2
       RandomHorizontalFlip: 0.5
+      RandomVerticalFlip: 0.5
+      RandomRotation: 2
       RandomPerspective: 0.15
       RandomResizedCrop:
-        scale: !!python/tuple
-        - 0.8
-        - 1.12
-        size: !!python/tuple
-        - 224
-        - 224
-      RandomRotation: 2
-      RandomVerticalFlip: 0.5
+        scale: [0.8, 1.12]
+        size: [224, 224]
+      RandomErasing: 0.1
+    epoch_len: 100
   val:
-    df_file: /mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_for_TB_v0.pkl
+    df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_for_TB_v0.pkl
     transforms:
-      CenterCrop: !!python/tuple
-      - 480
-      - 480
-      Resize: !!python/tuple
-      - 224
-      - 224
+      Resize: [224, 224]
   test:
-    df_file: /mnt/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_for_TB_v0.pkl
+    df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_for_TB_v0.pkl
     transforms:
-      CenterCrop: !!python/tuple
-      - 480
-      - 480
-      Resize: !!python/tuple
-      - 224
-      - 224
+      Resize: [224, 224]
 
 model:
   lr_config:
@@ -57,12 +52,17 @@ model:
   unpg:
     margin: 0.04
     wisk: 0.5
+  init_centroids: true
+  train_centroids: false
+
 
 trainer:
   epochs: 4000
   exps_dir: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/
   monitor: approx_test_acc
-  exp_name: new_blueprint_data_16Dec2024_split
+  monitor_mode: max
+  exp_name: crop_420x600__subsample_3x3__less_aug__${model.pretrained_model_name}
 
 analysis:
   df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl
+  k_top_models_to_analyze: 5
