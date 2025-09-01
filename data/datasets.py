@@ -1,6 +1,5 @@
 import os.path as osp
 import numpy as np
-from pathlib import Path
 import pandas as pd
 import imageio.v2 as imageio
 import torch

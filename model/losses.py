@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from typing import Any, Optional, Type
-from typing_extensions import TypedDict, NotRequired
+from typing import Optional
+from typing_extensions import TypedDict
 from torch import nn
 import torch
-from torch.nn.functional import cosine_similarity, normalize
+from torch.nn.functional import normalize
 import torch.nn.functional as F
-from utils import centroids_init
-from pytorch_metric_learning import losses
+from misc.utils import centroids_init
 from torchmetrics import F1Score, Precision, Recall, AUROC
 
 

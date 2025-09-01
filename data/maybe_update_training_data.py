@@ -54,6 +54,7 @@ def add_placement_ind(subject_sensor_df):
 
 
 def run_everything_and_return_new_train_path():
+    assert False, "code is buggy, e.g. mixes train and test data, and creating a new split is completely out of the question"
     dfs_dir = '/mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/'
 
     prev_data_df_files = list(map(str, Path(dfs_dir).glob('all_data_till_*.pkl')))

@@ -1,15 +1,7 @@
 import os
-os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-from os import path as osp
-import cv2
-from collections import Counter
-from matplotlib import pyplot as plt
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-import seaborn as sns
 import pickle
 from pathlib import Path
 from torchvision import transforms
@@ -18,7 +10,7 @@ from sklearn.metrics import roc_curve
 from sklearn.preprocessing import normalize
 from data.datasets import PixelBioIDGeneralClassDatasetV2
 from model.models import PrefixPlusPretrainedArcFaceModelWithDynamicHPV2
-from inference import Inference
+from misc.inference import Inference
 from .analysis import BioIDSimulatorAnalyzerV2, EnrolmentMethod
 import warnings
 

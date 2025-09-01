@@ -13,7 +13,6 @@ from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts, ReduceLROnPlat
 import functools
 from torch.utils.data import DataLoader
 
-import time
 
 def rsetattr(obj, attr, val):
     pre, _, post = attr.rpartition('.')
