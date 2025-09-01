@@ -11,7 +11,7 @@ from data.datasets import PixelBioIDGeneralClassDatasetV2_TEMP as PixelBioIDGene
 from model.models import PrefixPlusPretrainedArcFaceModelWithDynamicHPV2, MyStepLRScheduler
 from data.maybe_update_training_data import run_everything_and_return_new_train_path
 from analysis.analyze_models_and_save_results import run_analysis_and_get_results
-from utils import transforms_list_from_dict
+from misc.utils import transforms_list_from_dict
 
 import hydra
 from omegaconf import OmegaConf
