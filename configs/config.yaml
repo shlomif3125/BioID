@@ -15,7 +15,7 @@ data:
 
   train:
     update_train_data: false
-    df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_train_v14.pkl
+    df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_train_v14_removed_test_data.pkl
     transforms:
       ColorJitter:
         brightness: 0.1
@@ -61,7 +61,7 @@ trainer:
   exps_dir: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/V2/
   monitor: approx_test_acc
   monitor_mode: max
-  exp_name: crop_420x600__subsample_3x3__less_aug__${model.pretrained_model_name}
+  exp_name: crop_420x600__subsample_3x3__less_aug__${model.pretrained_model_name}_fixed_split
 
 analysis:
   df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl
