@@ -145,7 +145,7 @@ def main(cfg):
 
     if 'analysis' in cfg.pipeline_stages:
         print('GONNA GET ME SOME ANALYSIS')
-        analysis_results = run_analysis_and_get_results(exp_path, analysis_cfg.df_file, analysis_cfg.k_top_models_to_analyze)
+        analysis_results = run_analysis_and_get_results(exp_path, analysis_cfg.dataset, analysis_cfg.k_top_models_to_analyze)
         print('ANALYSIS AQUIRED')
 
         analysis_results.to_pickle(exp_path / 'analysis_results.pkl')

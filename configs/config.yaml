@@ -101,6 +101,8 @@ analysis:
     transforms:
       Resize: [224, 224]
   k_top_models_to_analyze: 5
+  monitor: ${trainer.monitor}
+  monitor_mode: ${trainer.monitor_mode}
 
 pipeline_stages:
   - train

@@ -137,21 +137,21 @@ def get_mean_sensor_subject_estimation_acc_from_df(df):
     return df.groupby('sensor_serial').apply(get_subject_estimation_acc_from_df).mean()
 
     
-def run_analysis_and_get_results(exp_path, test_df_path, k_top_models_to_analyze):
+def run_analysis_and_get_results(exp_path, analysis_cfg, k_top_models_to_analyze):
     all_results = []
 
     all_model_paths_to_check = []
 
-    config = pickle.load(open(Path(exp_path) / 'config.pkl', 'rb'))
-    monitor = config['monitor']
+    monitor = analysis_cfg.monitor
     model_files = [x for x in os.listdir(exp_path) if 'epoch=' in x and x.endswith('.ckpt')]
-    sorted_model_files = sorted(model_files, key=lambda x: float(x.split(f'{monitor}=')[1].split('.ckpt')[0]), reverse=True)
+    sorted_model_files = sorted(model_files, key=lambda x: float(x.split(f'{monitor}=')[1].split('.ckpt')[0]), 
+                                reverse=True if analysis_cfg.monitor_mode == 'max' else False)
     best_k_models = sorted_model_files[:k_top_models_to_analyze]
     for f in best_k_models:
         all_model_paths_to_check.append(os.path.join(exp_path, f))
 
     for model_path in tqdm(all_model_paths_to_check):
-        test_inference_df, inference_df_path = run_inference_and_return_path(model_path, test_df_path, recalc=False)
+        test_inference_df, inference_df_path = run_inference_and_return_path(model_path, analysis_cfg.dataset, recalc=False)
 
         for laser_power in [30, 35, 40, 45, 'All']:
             if laser_power == 'All':

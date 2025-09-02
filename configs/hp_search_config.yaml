@@ -17,7 +17,15 @@ data:
 
   train:
     update_train_data: false
+    name: train
+    is_train: true
     df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_train_v14_removed_test_data.pkl
+    batch_size: ${data.batch_size}
+    class_column: ${data.class_column}
+    path_column: ${data.path_column}
+    target_crop_size: ${data.target_crop_size}
+    subsample_factor: ${data.subsample_factor}
+    extra_column_outputs: ${data.extra_column_outputs}
     transforms:
       ColorJitter:
         brightness: 0.1
@@ -32,11 +40,27 @@ data:
       RandomErasing: 0.1
     epoch_len: 100
   val:
+    name: validation
+    is_train: false
     df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_val_for_TB_v0.pkl
+    batch_size: ${data.batch_size}
+    class_column: ${data.class_column}
+    path_column: ${data.path_column}
+    target_crop_size: ${data.target_crop_size}
+    subsample_factor: ${data.subsample_factor}
+    extra_column_outputs: ${data.extra_column_outputs}
     transforms:
       Resize: [224, 224]
   test:
+    name: test
+    is_train: false
     df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_for_TB_v0.pkl
+    batch_size: ${data.batch_size}
+    class_column: ${data.class_column}
+    path_column: ${data.path_column}
+    target_crop_size: ${data.target_crop_size}
+    subsample_factor: ${data.subsample_factor}
+    extra_column_outputs: ${data.extra_column_outputs}
     transforms:
       Resize: [224, 224]
 
@@ -66,8 +90,21 @@ trainer:
   exp_name: crop_420x600__subsample_3x3__less_aug__${model.pretrained_model_name}__LR_${model.lr_config.learning_rate}__Brightness_${data.train.transforms.ColorJitter.brightness}__Contrast_${data.train.transforms.ColorJitter.contrast}
 
 analysis:
-  df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl
+  dataset:
+    name: full_test_set
+    is_train: false
+    df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl
+    batch_size: ${data.batch_size}
+    class_column: ${data.class_column}
+    path_column: ${data.path_column}
+    target_crop_size: ${data.target_crop_size}
+    subsample_factor: ${data.subsample_factor}
+    extra_column_outputs: ${data.extra_column_outputs}
+    transforms:
+      Resize: [224, 224]
   k_top_models_to_analyze: 5
+  monitor: ${trainer.monitor}
+  monitor_mode: ${trainer.monitor_mode}
 
 pipeline_stages:
   # - train
