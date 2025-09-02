@@ -69,10 +69,13 @@ analysis:
   df_file: /mnt/ML/ModelsTrainResults/shlomi.fenster/PixelsBioID/meta_data_dfs/split_16Dec2024_test_v0.pkl
   k_top_models_to_analyze: 5
 
+pipeline_stages:
+  # - train
+  - analysis
 
 hydra:
   sweep:
-    dir: ${exps_dir}/${exp_name}
+    dir: ${trainer.exps_dir}/${trainer.exp_name}
     subdir: hp_search
   sweeper:
     params:  
@@ -81,7 +84,7 @@ hydra:
       data.train.transforms.ColorJitter.contrast: 0.1, 0.2
 
   launcher:
-    cpus_per_task: 12
+    cpus_per_task: 24
     mem_gb: 160
     partition: A6000_L40S_VAST
     gpus_per_task: 1

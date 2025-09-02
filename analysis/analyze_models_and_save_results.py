@@ -8,7 +8,7 @@ from torchvision import transforms
 from torch.utils.data import DataLoader
 from sklearn.metrics import roc_curve
 from sklearn.preprocessing import normalize
-from data.datasets import PixelBioIDGeneralClassDatasetV2
+from data.utils import get_ds_via_cfg
 from model.models import PrefixPlusPretrainedArcFaceModelWithDynamicHPV2
 from misc.inference import Inference
 from .analysis import BioIDSimulatorAnalyzerV2, EnrolmentMethod
@@ -18,7 +18,7 @@ tqdm.pandas()
 warnings.simplefilter('ignore', pd.errors.SettingWithCopyWarning)
 
 
-def run_inference_and_return_path(ckpt_path, test_df_path, recalc=True):
+def run_inference_and_return_path(ckpt_path, dataset_cfg, recalc=True):    
     exp_path = os.path.dirname(ckpt_path)
     ckpt_file_name = os.path.basename(ckpt_path)
     df_pkl_path = os.path.join(exp_path, f'test_inference_df__{ckpt_file_name.split(".ckpt")[0]}_NEW_BLUEPRINT_TEST.pkl')
@@ -33,29 +33,7 @@ def run_inference_and_return_path(ckpt_path, test_df_path, recalc=True):
     model = model.eval()
     model = model.to('cuda')
     
-    test_transforms = []
-    transforms_dict = {'CenterCrop': (480, 480), 'Resize': (224, 224)}
-    for k, v in transforms_dict.items():
-        t_cls = getattr(transforms, k)
-        if type(v) is dict:
-            t_inst = t_cls(**v)
-        else:
-            t_inst = t_cls(v)
-        test_transforms.append(t_inst)
-
-    test_df = pd.read_pickle(test_df_path)
-    test_ds = PixelBioIDGeneralClassDatasetV2(dataset_name='test', 
-                                              is_train=False, 
-                                              meta_data=test_df, 
-                                              class_column='subject_', 
-                                              transforms=test_transforms,
-                                              batch_size=66,   
-                                              path_column='local_png_path',
-                                              extra_column_outputs=['sensor_serial',
-                                                                    'subject_',
-                                                                    'selected_power', 
-                                                                    'placement_ind', 
-                                                                    'wiggle_ind'])
+    test_ds = get_ds_via_cfg(dataset_cfg, pd.read_pickle(dataset_cfg.df_file))
     test_dl_kwargs = model.val_dl_kwargs_list[1]
     test_dl = DataLoader(test_ds, **test_dl_kwargs)
     test_df = test_dl.dataset.meta_data
